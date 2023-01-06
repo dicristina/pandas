@@ -1585,7 +1585,8 @@ class TestLocBaseIndependent:
         index = Index([idx1, idx2], name="composite_index", tupleize_cols=False)
         df = DataFrame([(1, 2), (3, 4)], index=index, columns=["A", "B"])
 
-        result = df.loc[IndexType("foo", "bar")]["A"]
+        with tm.assert_produces_warning(FutureWarning):
+            result = df.loc[IndexType("foo", "bar")]["A"]
         assert result == 1
 
     def test_loc_setitem_single_column_mixed(self):

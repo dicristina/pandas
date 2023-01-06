@@ -506,6 +506,7 @@ Other API changes
 Deprecations
 ~~~~~~~~~~~~
 - Deprecated argument ``infer_datetime_format`` in :func:`to_datetime` and :func:`read_csv`, as a strict version of it is now the default (:issue:`48621`)
+- Deprecate the use of tuple subclasses in :meth:`DataFrame.loc` to select by label when the index has a single level (:issue:`50597`)
 
 .. ---------------------------------------------------------------------------
 

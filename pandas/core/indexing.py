@@ -9,6 +9,7 @@ from typing import (
     cast,
     final,
 )
+import warnings
 
 import numpy as np
 
@@ -25,6 +26,7 @@ from pandas.errors import (
     LossySetitemError,
 )
 from pandas.util._decorators import doc
+from pandas.util._exceptions import find_stack_level
 
 from pandas.core.dtypes.cast import (
     can_hold_element,
@@ -1311,8 +1313,18 @@ class _LocIndexer(_LocationIndexer):
 
         labels = self.obj._get_axis(axis)
 
-        if isinstance(key, tuple) and isinstance(labels, MultiIndex):
-            key = tuple(key)
+        if isinstance(key, tuple) and type(key) is not tuple:
+            if isinstance(labels, MultiIndex):
+                key = tuple(key)
+            else:
+                # GH#50597
+                warnings.warn(
+                    "In a future version of pandas tuple subclasses will "
+                    "work as tuple when indexing by label with a single level index, "
+                    "possibly raising an exception.",
+                    FutureWarning,
+                    stacklevel=find_stack_level(),
+                )
 
         if isinstance(key, slice):
             self._validate_key(key, axis)
